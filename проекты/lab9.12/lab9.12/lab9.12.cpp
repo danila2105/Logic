@@ -52,6 +52,93 @@ void bfs(int graph[MAX_NODES][MAX_NODES], int n, int startNode) {
     }
 }
 
+// Функция для определения эксцентриситета вершины
+int findEccentricity(int graph[MAX_NODES][MAX_NODES], int n, int vertex) {
+    bool visited[MAX_NODES] = { false };
+    int distances[MAX_NODES] = { 0 };
+    std::queue<int> q;
+
+    q.push(vertex);
+    visited[vertex] = true;
+
+    while (!q.empty()) {
+        int currentNode = q.front();
+        q.pop();
+
+        for (int i = 0; i < n; i++) {
+            if (graph[currentNode][i] && !visited[i]) {
+                q.push(i);
+                visited[i] = true;
+                distances[i] = distances[currentNode] + 1;
+            }
+        }
+    }
+
+    // Находим максимальное расстояние (эксцентриситет)
+    int eccentricity = 0;
+    for (int i = 0; i < n; i++) {
+        if (distances[i] > eccentricity) {
+            eccentricity = distances[i];
+        }
+    }
+
+    return eccentricity;
+}
+
+// Функция для определения радиуса графа
+int findRadius(int graph[MAX_NODES][MAX_NODES], int n) {
+    int minEccentricity = INT_MAX;
+
+    for (int i = 0; i < n; i++) {
+        int eccentricity = findEccentricity(graph, n, i);
+
+        if (eccentricity < minEccentricity) {
+            minEccentricity = eccentricity;
+        }
+    }
+
+    return minEccentricity;
+}
+
+// Функция для определения диаметра графа
+int findDiameter(int graph[MAX_NODES][MAX_NODES], int n) {
+    int maxEccentricity = 0;
+
+    for (int i = 0; i < n; i++) {
+        int eccentricity = findEccentricity(graph, n, i);
+
+        if (eccentricity > maxEccentricity) {
+            maxEccentricity = eccentricity;
+        }
+    }
+
+    return maxEccentricity;
+}
+
+// Функция для определения центральных вершин
+void findCentralVertices(int graph[MAX_NODES][MAX_NODES], int n, int radius) {
+    printf("Центральные вершины (эксцентриситет равен радиусу графа):\n");
+    for (int i = 0; i < n; i++) {
+        int eccentricity = findEccentricity(graph, n, i);
+
+        if (eccentricity == radius) {
+            printf("%d\n", i);
+        }
+    }
+}
+
+// Функция для определения периферийных вершин
+void findPeripheralVertices(int graph[MAX_NODES][MAX_NODES], int n, int diameter) {
+    printf("Периферийные вершины (эксцентриситет равен диаметру графа):\n");
+    for (int i = 0; i < n; i++) {
+        int eccentricity = findEccentricity(graph, n, i);
+
+        if (eccentricity == diameter) {
+            printf("%d\n", i);
+        }
+    }
+}
+
 int main() {
     setlocale(LC_ALL, "Russian");
     srand(time(NULL)); // Инициализируем генератор случайных чисел
@@ -77,11 +164,19 @@ int main() {
     printf("Введите начальный узел для поиска расстояний: ");
     scanf("%d", &startNode);
 
-    clock_t start = clock();
     bfs(graph, n, startNode);
-    clock_t end = clock();
-    double time_spent5 = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("time adjmatrix v wiriny: %f s.\n", time_spent5);
+
+    // Определение радиуса и диаметра
+    int radius = findRadius(graph, n);
+    int diameter = findDiameter(graph, n);
+
+    printf("Радиус графа: %d\n", radius);
+    printf("Диаметр графа: %d\n", diameter);
+
+    // Определение центральных и периферийных вершин
+    findCentralVertices(graph, n, radius);
+    findPeripheralVertices(graph, n, diameter);
+    
 
     return 0;
 }
