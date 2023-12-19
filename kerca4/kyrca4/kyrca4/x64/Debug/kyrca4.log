@@ -1,0 +1,5 @@
+﻿  kyrca4.cpp
+D:\kerca4\kyrca4\kyrca4\kyrca4.cpp(147,10): warning C4477: "scanf": в строке форматирования "%s" требуется аргумент типа "char *", но вариативный аргумент "1" имеет тип "const char *"
+D:\kerca4\kyrca4\kyrca4\kyrca4.cpp(181,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\kerca4\kyrca4\kyrca4\kyrca4.cpp(173,7): warning C4101: namefile: неиспользованная локальная переменная
+  kyrca4.vcxproj -> D:\kerca4\kyrca4\x64\Debug\kyrca4.exe
